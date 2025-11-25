@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Todo List Job</title>
+
+<!-- CSS -->
 <link rel="stylesheet" href="todo_list.css" />
 </head>
 <body>
@@ -15,7 +17,7 @@
 <nav class="navbar">
   <div class="nav-brand">Todo List Job</div>
   <ul class="nav-links">
-    <li><a href="cek_todo.html" id="goToTodo">Cek Todo List</a></li>
+    <li><a href="cek_todo.html">Cek Todo List</a></li>
   </ul>
 </nav>
 
@@ -24,9 +26,11 @@
   <!-- SIDEPANEL -->
   <aside class="sidepanel">
 
+    <!-- GREETING -->
     <div class="greeting" id="greeting">Hello</div>
 
-    <div class="quote" id="quote">Motivational quote here</div>
+    <!-- QUOTE -->
+    <div class="quote" id="quote">Loading quotes...</div>
 
     <!-- DAILY GOAL -->
     <div class="daily-goal">
@@ -45,12 +49,14 @@
       <div id="goalText" class="goal-text"></div>
     </div>
 
-    <!-- POPUP APRESIASI GOAL -->
-    <div id="goalCongrats" class="goal-congrats">🔥 Kamu hebat! Daily goal selesai!</div>
+    <!-- POPUP APRESIASI -->
+    <div id="goalCongrats" class="goal-congrats">
+      🔥 Kamu hebat! Daily goal selesai!
+    </div>
 
     <!-- PROGRESS RING -->
     <div class="progress-block">
-      <div class="progress-title">Progress hari ini</div>
+      <div class="progress-title">Progress Hari Ini</div>
 
       <div class="ring-wrap">
         <svg id="progressRing" width="120" height="120" viewBox="0 0 120 120">
@@ -85,26 +91,30 @@
 
     <div class="input-area">
       <input id="taskInput" type="text" placeholder="Tambah pekerjaan..." />
-      <button id="addBtn">Tambah</button>
+      <button id="addBtn" class="btn">Tambah</button>
     </div>
 
     <div class="hint">
-      Task tidak ditampilkan di sini silahkan cek halaman 
+      Task tidak ditampilkan di sini. Silakan buka 
       <a href="cek_todo.html">Cek Todo</a> untuk daftar lengkap.
     </div>
 
-    <!-- Confetti -->
+    <!-- CONFETTI CANVAS -->
     <canvas id="confettiCanvas" class="confetti"></canvas>
   </section>
 
 </main>
 
 <!-- NOTIFIKASI -->
-<div id="notify" class="notify">Todo kamu sudah masuk ke halaman Cek Todo!</div>
+<div id="notify" class="notify">
+  Todo kamu sudah masuk ke halaman Cek Todo!
+</div>
 
 <!-- FOOTER -->
 <footer class="footer">© 2025 Todo List</footer>
 
+<!-- JS -->
 <script src="todo_list.js"></script>
+
 </body>
 </html>
