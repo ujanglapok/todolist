@@ -98,7 +98,7 @@ body {
   .page{ grid-template-columns: 1fr; padding: 0 16px; gap: 18px; }
 }
 
-/* sidepanel */
+
 .sidepanel {
   width: 100%;
   display: flex;
@@ -311,3 +311,4 @@ button:active, .btn:active { transform: translateY(0); }
   .quote{ font-size:13px; min-height:48px }
   .nav-links{ display:none } /* keep navbar simple on tiny screens */
 }
+
