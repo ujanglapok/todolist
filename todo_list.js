@@ -88,26 +88,21 @@ taskInput?.addEventListener("keypress", e => {
 
 
 // ===============================
-// DAILY GOAL SYSTEM (FIXED)
+// DAILY GOAL SYSTEM
 // ===============================
-
-// Load saved goal safely
 function loadGoal() {
   const saved = localStorage.getItem("daily_goal");
   const done = localStorage.getItem("daily_goal_done") === "true";
 
   if (saved && !done) {
-    // Goal ada & belum selesai
     goalText.textContent = "🎯 Goal: " + saved;
     goalCheck.checked = false;
   } else {
-    // Goal selesai atau belum ada → selalu reset UI = tidak centang
     goalText.textContent = "";
     goalCheck.checked = false;
   }
 }
 
-// Save goal text
 function saveGoal() {
   const v = goalInput.value.trim();
   if (!v) return;
@@ -119,11 +114,8 @@ function saveGoal() {
   goalCheck.checked = false;
   goalInput.value = "";
 }
-
 saveGoalBtn?.addEventListener("click", saveGoal);
 
-
-// Mark daily goal complete
 function completeDailyGoal() {
   localStorage.removeItem("daily_goal");
   localStorage.setItem("daily_goal_done", "true");
@@ -131,25 +123,19 @@ function completeDailyGoal() {
   goalText.textContent = "";
   showGoalCongrats();
 
-  // Setelah animasi → pastikan tetap tidak centang
   setTimeout(() => {
     goalCheck.checked = false;
   }, 500);
 }
 
-
-// When user manually clicks checkbox
 goalCheck?.addEventListener("change", () => {
   if (goalCheck.checked) {
     completeDailyGoal();
   } else {
-    // User uncheck → simpan status mati
     localStorage.setItem("daily_goal_done", "false");
   }
 });
 
-
-// AUTO goal complete when tasks 100%
 function checkDailyGoalAuto() {
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
@@ -223,7 +209,9 @@ function runSuperGreeting() {
 
   const hour = now.getHours();
   const dayName = now.toLocaleDateString(lang, { weekday: "long" });
-  const timeString = now.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const timeString = now.toLocaleTimeString(lang, {
+    hour: "2-digit", minute: "2-digit", second: "2-digit"
+  });
 
   let greet = "";
   if (hour >= 4 && hour < 11) greet = lang.startsWith("id") ? "Selamat pagi 🌅" : "Good morning 🌅";
@@ -244,6 +232,62 @@ function runSuperGreeting() {
 
 
 // ===============================
+// MOTIVATIONAL QUOTES SYSTEM (30 mins)
+// ===============================
+
+const quotes = [
+  "Tetap bergerak walau pelan, yang penting tidak berhenti.",
+  "Kerja keras tidak akan mengkhianati hasil.",
+  "Kamu lebih kuat dari yang kamu kira.",
+  "Fokus pada progres, bukan kesempurnaan.",
+  "Sedikit demi sedikit, lama-lama menjadi bukit.",
+  "Disiplin hari ini menentukan masa depanmu.",
+  "Mulai sekarang, bukan nanti.",
+  "Tidak ada usaha yang sia-sia.",
+  "Perubahan besar dimulai dari langkah kecil.",
+  "Jangan menyerah, kamu sudah sejauh ini!"
+];
+
+function updateQuote() {
+  const quoteEl = document.getElementById("quote");
+  if (!quoteEl) return;
+
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const selected = quotes[randomIndex];
+
+  quoteEl.textContent = selected;
+  localStorage.setItem("quote_last", selected);
+  localStorage.setItem("quote_time", Date.now());
+}
+
+function quoteScheduler() {
+  const quoteEl = document.getElementById("quote");
+  if (!quoteEl) return;
+
+  const lastQuote = localStorage.getItem("quote_last");
+  const lastTime = Number(localStorage.getItem("quote_time"));
+
+  if (!lastQuote || !lastTime) {
+    updateQuote();
+    return;
+  }
+
+  const now = Date.now();
+  const diff = now - lastTime;
+
+  if (diff >= 30 * 60 * 1000) {
+    // 30 menit berlalu
+    updateQuote();
+  } else {
+    // tetap pakai quote sebelumnya
+    quoteEl.textContent = lastQuote;
+  }
+}
+
+setInterval(quoteScheduler, 60000); // cek tiap 1 menit
+
+
+// ===============================
 // STARTUP
 // ===============================
 loadGoal();
@@ -251,3 +295,4 @@ updateProgress();
 checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
+quoteScheduler();
