@@ -236,6 +236,7 @@ function runSuperGreeting() {
 // ===============================
 
 const quotes = [
+  "Tetap bergerak walau pelan, yang penting tidak berhenti.",
   "Kerja keras tidak akan mengkhianati hasil.",
   "Kamu lebih kuat dari yang kamu kira.",
   "Fokus pada progres, bukan kesempurnaan.",
@@ -286,7 +287,56 @@ function quoteScheduler() {
 setInterval(quoteScheduler, 60000); // cek tiap 1 menit
 
 
-// ===============================
+// MOOD SYSTEM
+const moodButtons = document.querySelectorAll(".mood-btn");
+const moodText = document.getElementById("moodText");
+
+// Kata-kata sesuai mood
+const moodMessages = {
+  happy: [
+    "Senangnya kamu hari ini! Pertahankan energi positifmu! ✨",
+    "Kamu terlihat bersemangat! Hari ini pasti jadi hari yang hebat! 😄",
+    "Mood bagus! Gunakan untuk menyelesaikan banyak hal! 🚀"
+  ],
+  okay: [
+    "Sedang biasa saja ya? Tidak apa-apa, pelan tapi pasti. 🌿",
+    "Tidak buruk, tidak juga hebat. Tapi kamu tetap maju! 💪",
+    "Hari biasa itu normal. Kamu tetap hebat kok. 🙂"
+  ],
+  sad: [
+    "Lagi sedih? Nggak apa-apa. Kamu kuat, kamu bisa melewati ini. 🤍",
+    "Terasa berat ya? Ingat, semua bakal membaik. Kamu nggak sendiri. 🌧️➡️🌤️",
+    "Pelan-pelan ya… Kamu sudah melakukan yang terbaik. Aku bangga sama kamu. 💛"
+  ]
+};
+
+// Klik mood
+moodButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const mood = btn.dataset.mood;
+
+    // Random salah satu pesan
+    const list = moodMessages[mood];
+    const message = list[Math.floor(Math.random() * list.length)];
+
+    moodText.textContent = message;
+
+    // Simpan mood ke localStorage
+    localStorage.setItem("currentMood", mood);
+    localStorage.setItem("currentMoodMessage", message);
+  });
+});
+
+// Load mood sebelumnya saat open halaman
+function loadMood() {
+  const savedMood = localStorage.getItem("currentMood");
+  const savedMsg = localStorage.getItem("currentMoodMessage");
+
+  if (savedMood && savedMsg) {
+    moodText.textContent = savedMsg;
+  }
+}
+
 // STARTUP
 // ===============================
 loadGoal();
@@ -295,4 +345,3 @@ checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
-
