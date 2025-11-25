@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Todo List Job</title>
+<link rel="stylesheet" href="todo_list.css" />
+</head>
+<body>
+
+<!-- Background animasi -->
+<div class="bg-anim" aria-hidden="true"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="nav-brand">Todo List Job</div>
+  <ul class="nav-links">
+    <li><a href="cek_todo.html" id="goToTodo">Cek Todo List</a></li>
+  </ul>
+</nav>
+
+<main class="page">
+
+  <!-- SIDEPANEL -->
+  <aside class="sidepanel">
+
+    <div class="greeting" id="greeting">Hello</div>
+
+    <div class="quote" id="quote">Motivational quote here</div>
+
+    <!-- DAILY GOAL -->
+    <div class="daily-goal">
+      <label class="label">Daily Goal</label>
+
+      <div class="goal-row">
+        <input id="goalInput" class="input" placeholder="Contoh: Selesaikan 3 tugas" />
+        <button id="saveGoal" class="btn small">Simpan</button>
+      </div>
+
+      <div class="goal-done-row">
+        <input type="checkbox" id="goalCheck" />
+        <label for="goalCheck" class="goal-check-label">Goal Selesai</label>
+      </div>
+
+      <div id="goalText" class="goal-text"></div>
+    </div>
+
+    <!-- POPUP APRESIASI GOAL -->
+    <div id="goalCongrats" class="goal-congrats">🔥 Kamu hebat! Daily goal selesai!</div>
+
+    <!-- PROGRESS RING -->
+    <div class="progress-block">
+      <div class="progress-title">Progress hari ini</div>
+
+      <div class="ring-wrap">
+        <svg id="progressRing" width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+          <circle cx="60" cy="60" r="48" class="ring-fill"></circle>
+        </svg>
+        <div class="ring-label" id="ringLabel">0%</div>
+      </div>
+    </div>
+
+    <!-- MOOD PICKER -->
+    <div class="mood">
+      <div class="label">Mood hari ini</div>
+
+      <div class="mood-row">
+        <button class="mood-btn" data-mood="happy">😊</button>
+        <button class="mood-btn" data-mood="okay">😐</button>
+        <button class="mood-btn" data-mood="sad">😕</button>
+      </div>
+
+      <div id="moodText" class="goal-text"></div>
+    </div>
+
+    <!-- MINI CALENDAR -->
+    <div class="mini-calendar" id="miniCalendar"></div>
+
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <section class="container">
+    <h2 class="title">Tambah Todo</h2>
+
+    <div class="input-area">
+      <input id="taskInput" type="text" placeholder="Tambah pekerjaan..." />
+      <button id="addBtn">Tambah</button>
+    </div>
+
+    <div class="hint">
+      Task tidak ditampilkan di sini silahkan cek halaman 
+      <a href="cek_todo.html">Cek Todo</a> untuk daftar lengkap.
+    </div>
+
+    <!-- Confetti -->
+    <canvas id="confettiCanvas" class="confetti"></canvas>
+  </section>
+
+</main>
+
+<!-- NOTIFIKASI -->
+<div id="notify" class="notify">Todo kamu sudah masuk ke halaman Cek Todo!</div>
+
+<!-- FOOTER -->
+<footer class="footer">© 2025 Todo List</footer>
+
+<script src="todo_list.js"></script>
+</body>
+</html>
