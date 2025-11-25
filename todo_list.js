@@ -1,61 +1,73 @@
-// todo_list.js (cleaned)
-// - Adds tasks to localStorage
-// - Updates progress ring (reads tasks from storage)
-// - Saves daily goal and triggers congrats/confetti
-// - Simple, defensive, no duplicate functions
-
-// Load tasks safely
+// ===============================
+// LOAD TASKS
+// ===============================
 let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
 const taskInput = document.getElementById("taskInput");
 const addBtn = document.getElementById("addBtn");
 
-// Elements for daily goal & UI
+// DAILY GOAL elements
 const goalInput = document.getElementById("goalInput");
 const saveGoalBtn = document.getElementById("saveGoal");
 const goalText = document.getElementById("goalText");
 const goalCheck = document.getElementById("goalCheck");
 const goalCongrats = document.getElementById("goalCongrats");
+
+// UI
 const notifyEl = document.getElementById("notify");
 const confettiCanvas = document.getElementById("confettiCanvas");
 
-// Save tasks to storage and refresh progress
+
+// ===============================
+// SAVE TASK + PROGRESS + AUTO-GOAL
+// ===============================
 function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
   updateProgress();
   checkDailyGoalAuto();
 }
 
-// Progress ring updater (reads fresh from storage)
+
+// ===============================
+// PROGRESS RING
+// ===============================
 function updateProgress() {
   const ring = document.getElementById("progressRing");
   const ringLabel = document.getElementById("ringLabel");
   if (!ring || !ringLabel) return;
 
   tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
   const pct = total === 0 ? 0 : Math.round((done / total) * 100);
 
   const circle = ring.querySelector(".ring-fill");
   if (!circle) return;
+
   const radius = 48;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (pct / 100) * circumference;
 
-  circle.style.strokeDasharray = `${circumference}`;
-  circle.style.strokeDashoffset = `${offset}`;
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = offset;
   ringLabel.textContent = pct + "%";
 }
 
-// Notification popup
+
+// ===============================
+// NOTIFICATION
+// ===============================
 function showNotification() {
   if (!notifyEl) return;
   notifyEl.classList.add("show");
   setTimeout(() => notifyEl.classList.remove("show"), 1600);
 }
 
-// Add task
+
+// ===============================
+// ADD TASK
+// ===============================
 function addTask() {
   if (!taskInput) return;
   const text = taskInput.value.trim();
@@ -69,60 +81,98 @@ function addTask() {
   updateProgress();
 }
 
-// Daily goal functions
+addBtn?.addEventListener("click", addTask);
+taskInput?.addEventListener("keypress", e => {
+  if (e.key === "Enter") addTask();
+});
+
+
+// ===============================
+// DAILY GOAL SYSTEM (FIXED)
+// ===============================
+
+// Load saved goal safely
 function loadGoal() {
   const saved = localStorage.getItem("daily_goal");
   const done = localStorage.getItem("daily_goal_done") === "true";
-  if (saved && !done) goalText.textContent = "🎯 Goal: " + saved;
-  if (done && goalCheck) {
-    // If goal was auto-completed earlier, show congrats briefly
-    goalCheck.checked = true;
+
+  if (saved && !done) {
+    // Goal ada & belum selesai
+    goalText.textContent = "🎯 Goal: " + saved;
+    goalCheck.checked = false;
+  } else {
+    // Goal selesai atau belum ada → selalu reset UI = tidak centang
     goalText.textContent = "";
-    showGoalCongrats();
+    goalCheck.checked = false;
   }
 }
 
+// Save goal text
 function saveGoal() {
-  if (!goalInput) return;
   const v = goalInput.value.trim();
   if (!v) return;
+
   localStorage.setItem("daily_goal", v);
   localStorage.setItem("daily_goal_done", "false");
+
   goalText.textContent = "🎯 Goal: " + v;
-  if (goalCheck) goalCheck.checked = false;
+  goalCheck.checked = false;
   goalInput.value = "";
 }
 
+saveGoalBtn?.addEventListener("click", saveGoal);
+
+
+// Mark daily goal complete
 function completeDailyGoal() {
   localStorage.removeItem("daily_goal");
   localStorage.setItem("daily_goal_done", "true");
-  if (goalText) goalText.textContent = "";
+
+  goalText.textContent = "";
   showGoalCongrats();
-  // uncheck after short delay to reset UI
-  if (goalCheck) setTimeout(() => (goalCheck.checked = false), 800);
+
+  // Setelah animasi → pastikan tetap tidak centang
+  setTimeout(() => {
+    goalCheck.checked = false;
+  }, 500);
 }
 
+
+// When user manually clicks checkbox
+goalCheck?.addEventListener("change", () => {
+  if (goalCheck.checked) {
+    completeDailyGoal();
+  } else {
+    // User uncheck → simpan status mati
+    localStorage.setItem("daily_goal_done", "false");
+  }
+});
+
+
+// AUTO goal complete when tasks 100%
 function checkDailyGoalAuto() {
-  tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
+
   if (total > 0 && done === total) {
     completeDailyGoal();
   }
 }
 
-// Congrat & confetti
+
+// ===============================
+// CONGRATS + CONFETTI
+// ===============================
 function showGoalCongrats() {
-  if (!goalCongrats) return;
   goalCongrats.style.display = "block";
   startConfetti();
+
   setTimeout(() => {
     goalCongrats.style.display = "none";
-  }, 2400);
+  }, 2000);
 }
 
 function startConfetti() {
-  if (!confettiCanvas) return;
   const canvas = confettiCanvas;
   const ctx = canvas.getContext("2d");
   canvas.style.display = "block";
@@ -143,13 +193,15 @@ function startConfetti() {
   let frame = 0;
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     pieces.forEach(p => {
       p.y += p.speed;
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x, p.y, p.size, p.size);
     });
+
     frame++;
-    if (frame < 50) requestAnimationFrame(animate);
+    if (frame < 40) requestAnimationFrame(animate);
     else {
       ctx.clearRect(0,0,canvas.width,canvas.height);
       canvas.style.display = "none";
@@ -158,49 +210,44 @@ function startConfetti() {
   animate();
 }
 
-// Events
-if (addBtn) addBtn.addEventListener("click", addTask);
-if (taskInput) taskInput.addEventListener("keypress", e => { if (e.key === "Enter") addTask(); });
-if (saveGoalBtn) saveGoalBtn.addEventListener("click", saveGoal);
-if (goalCheck) goalCheck.addEventListener("change", () => {
-  if (goalCheck.checked) {
-    completeDailyGoal();
-  } else {
-    // user uncheck manual → simpan status mati
-    localStorage.setItem("daily_goal_done", "false");
-  }
-});
 
-
-// Greeting (single combined, localized)
+// ===============================
+// SUPER GREETING CLOCK
+// ===============================
 function runSuperGreeting() {
   const greetingEl = document.getElementById("greeting");
   if (!greetingEl) return;
-  const userLang = navigator.language || "id-ID";
+
+  const lang = navigator.language || "id-ID";
   const now = new Date();
+
   const hour = now.getHours();
-  const dayName = now.toLocaleDateString(userLang, { weekday: "long" });
-  const timeString = now.toLocaleTimeString(userLang, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const dayName = now.toLocaleDateString(lang, { weekday: "long" });
+  const timeString = now.toLocaleTimeString(lang, { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
   let greet = "";
-  if (hour >= 4 && hour < 11) greet = userLang.startsWith("id") ? "Selamat pagi 🌅" : "Good morning 🌅";
-  else if (hour >= 11 && hour < 15) greet = userLang.startsWith("id") ? "Selamat siang ☀️" : "Good afternoon ☀️";
-  else if (hour >= 15 && hour < 18) greet = userLang.startsWith("id") ? "Selamat sore 🌤️" : "Good evening 🌤️";
-  else greet = userLang.startsWith("id") ? "Selamat malam 🌙" : "Good night 🌙";
+  if (hour >= 4 && hour < 11) greet = lang.startsWith("id") ? "Selamat pagi 🌅" : "Good morning 🌅";
+  else if (hour >= 11 && hour < 15) greet = lang.startsWith("id") ? "Selamat siang ☀️" : "Good afternoon ☀️";
+  else if (hour >= 15 && hour < 18) greet = lang.startsWith("id") ? "Selamat sore 🌤️" : "Good evening 🌤️";
+  else greet = lang.startsWith("id") ? "Selamat malam 🌙" : "Good night 🌙";
 
-  const dayMessage = userLang.startsWith("id") ? `Semangat di hari ${dayName}!` : `Happy ${dayName}!`;
+  const dayMsg = lang.startsWith("id")
+    ? `Semangat di hari ${dayName}!`
+    : `Happy ${dayName}!`;
 
   greetingEl.innerHTML = `
     <div style="font-size:22px;font-weight:700;margin-bottom:6px;">${greet}</div>
-    <div style="font-size:14px;opacity:.85;margin-bottom:4px;">${dayMessage}</div>
+    <div style="font-size:14px;opacity:.8;margin-bottom:4px;">${dayMsg}</div>
     <div style="font-size:13px;color:#0f766e;font-weight:600;">${timeString}</div>
   `;
 }
 
-// Startup
+
+// ===============================
+// STARTUP
+// ===============================
 loadGoal();
 updateProgress();
 checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
-
