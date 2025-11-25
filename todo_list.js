@@ -236,7 +236,6 @@ function runSuperGreeting() {
 // ===============================
 
 const quotes = [
-  "Tetap bergerak walau pelan, yang penting tidak berhenti.",
   "Kerja keras tidak akan mengkhianati hasil.",
   "Kamu lebih kuat dari yang kamu kira.",
   "Fokus pada progres, bukan kesempurnaan.",
@@ -296,3 +295,4 @@ checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
+
