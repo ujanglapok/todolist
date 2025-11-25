@@ -162,7 +162,15 @@ function startConfetti() {
 if (addBtn) addBtn.addEventListener("click", addTask);
 if (taskInput) taskInput.addEventListener("keypress", e => { if (e.key === "Enter") addTask(); });
 if (saveGoalBtn) saveGoalBtn.addEventListener("click", saveGoal);
-if (goalCheck) goalCheck.addEventListener("change", () => { if (goalCheck.checked) completeDailyGoal(); });
+if (goalCheck) goalCheck.addEventListener("change", () => {
+  if (goalCheck.checked) {
+    completeDailyGoal();
+  } else {
+    // user uncheck manual → simpan status mati
+    localStorage.setItem("daily_goal_done", "false");
+  }
+});
+
 
 // Greeting (single combined, localized)
 function runSuperGreeting() {
@@ -195,3 +203,4 @@ updateProgress();
 checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
+
