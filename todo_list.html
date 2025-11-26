@@ -116,9 +116,15 @@
 <footer class="footer">© 2025 Todo List</footer>
 
 <!-- JS -->
-<script src="todo_list.js?v=Date.now()"></script>
+<script>
+  const s = document.createElement("script");
+  s.src = "todo_list.js?v=" + Date.now();
+  document.body.appendChild(s);
+</script>
+
 
 </body>
 </html>
+
 
 
