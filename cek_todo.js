@@ -5,23 +5,19 @@
 
 // klik lembut
 const sClick = () => {
-  const a = new Audio(
-    "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA..." +
-    "AAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg"
-  );
-  a.volume = 0.45;
+  const a = new Audio("data:audio/wav;base64,UklGRuQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YU4AAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA=");
+  a.volume = 1;
   a.play();
 };
 
+
 // woosh lembut (hapus)
 const sWoosh = () => {
-  const a = new Audio(
-    "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAADAAACpQCA..." +
-    "AAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg"
-  );
-  a.volume = 0.5;
+  const a = new Audio("data:audio/wav;base64,UklGRrwAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YUwAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA=");
+  a.volume = 1;
   a.play();
 };
+
 
 
 // ===================================================
@@ -190,4 +186,5 @@ const sWoosh = () => {
 
   render();
 })();
+
 
