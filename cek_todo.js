@@ -1,5 +1,17 @@
-// cek_todo.js (cleaned)
-// Reads tasks from localStorage and renders interactive list
+// ===============================
+// SOUND EFFECTS (base64 embedded)
+// ===============================
+const sClick = () => {
+  new Audio("data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAA...AAA").play();
+};
+
+const sWoosh = () => {
+  new Audio("data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAA...BBB").play();
+};
+
+// ===================================================
+// cek_todo.js — Render task list + progress + sounds
+// ===================================================
 (function() {
   const taskList = document.getElementById("taskList");
   const container = document.querySelector(".container");
@@ -7,7 +19,7 @@
 
   let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
-  // Insert controls area: progress + clear completed
+  // Insert controls area (progress bar + clear button)
   const controls = document.createElement("div");
   controls.className = "ct-controls";
   controls.style.display = "flex";
@@ -15,7 +27,6 @@
   controls.style.justifyContent = "space-between";
   controls.style.marginBottom = "12px";
 
-  // Progress label + bar
   const progressLabel = document.createElement("div");
   progressLabel.textContent = "Progress — 0%";
   progressLabel.style.fontSize = "13px";
@@ -24,6 +35,7 @@
   const progressBarWrap = document.createElement("div");
   progressBarWrap.style.flex = "1";
   progressBarWrap.style.marginLeft = "14px";
+
   const progressBar = document.createElement("div");
   progressBar.style.width = "100%";
   progressBar.style.height = "10px";
@@ -43,7 +55,6 @@
   controls.appendChild(progressLabel);
   controls.appendChild(progressBarWrap);
 
-  // Clear completed button
   const clearBtn = document.createElement("button");
   clearBtn.textContent = "Bersihkan selesai";
   clearBtn.style.marginLeft = "12px";
@@ -67,14 +78,17 @@
     const total = tasks.length;
     const done = tasks.filter(t => t.done).length;
     const pct = total === 0 ? 0 : Math.round((done / total) * 100);
+
     progressFill.style.width = pct + "%";
     progressLabel.textContent = `Progress — ${pct}%`;
+
     clearBtn.style.display = tasks.some(t => t.done) ? "inline-block" : "none";
   }
 
   function render() {
     tasks.sort((a,b) => (a.done === b.done) ? 0 : (a.done ? 1 : -1));
     taskList.innerHTML = "";
+
     tasks.forEach((task, i) => {
       const li = document.createElement("li");
       li.className = "task" + (task.done ? " done" : "");
@@ -128,27 +142,36 @@
       li.appendChild(row);
       taskList.appendChild(li);
 
+      // =======================
+      // ADD CHECK SOUND
+      // =======================
       chk.addEventListener("click", () => {
         tasks[i].done = !tasks[i].done;
         save();
+        sClick();   // 🔊 klik lembut
         render();
       });
 
+      // =======================
+      // ADD DELETE SOUND
+      // =======================
       del.addEventListener("click", () => {
         tasks.splice(i,1);
         save();
+        sWoosh();   // 🔊 woosh lembut
         render();
       });
     });
+
     calcProgress();
   }
 
   clearBtn.addEventListener("click", () => {
     tasks = tasks.filter(t => !t.done);
     save();
+    sWoosh();
     render();
   });
 
-  // initial render
   render();
 })();
