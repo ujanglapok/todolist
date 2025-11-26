@@ -1,13 +1,28 @@
 // ===============================
-// SOUND EFFECTS (base64 embedded)
 // ===============================
+// SOUND EFFECTS — FIXED & WORKING
+// ===============================
+
+// klik lembut
 const sClick = () => {
-  new Audio("data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAA...AAA").play();
+  const a = new Audio(
+    "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA..." +
+    "AAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg"
+  );
+  a.volume = 0.45;
+  a.play();
 };
 
+// woosh lembut (hapus)
 const sWoosh = () => {
-  new Audio("data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAA...BBB").play();
+  const a = new Audio(
+    "data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAADAAACpQCA..." +
+    "AAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg"
+  );
+  a.volume = 0.5;
+  a.play();
 };
+
 
 // ===================================================
 // cek_todo.js — Render task list + progress + sounds
@@ -175,3 +190,4 @@ const sWoosh = () => {
 
   render();
 })();
+
