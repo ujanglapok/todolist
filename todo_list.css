@@ -311,3 +311,12 @@ button:active, .btn:active { transform: translateY(0); }
   .quote{ font-size:13px; min-height:48px }
   .nav-links{ display:none } /* keep navbar simple on tiny screens */
 }
+.new-task-anim {
+  animation: newTask .35s ease;
+}
+
+@keyframes newTask {
+  0% { transform: scale(.94); opacity: .5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
