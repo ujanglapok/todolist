@@ -1,6 +1,6 @@
-// ======================================================
+// ===============================
 // LOAD TASKS
-// ======================================================
+// ===============================
 let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
 
 const taskInput = document.getElementById("taskInput");
@@ -18,19 +18,18 @@ const notifyEl = document.getElementById("notify");
 const confettiCanvas = document.getElementById("confettiCanvas");
 
 
-// ======================================================
+// ===============================
 // SAVE TASK + PROGRESS + AUTO-GOAL
-// ======================================================
+// ===============================
 function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
   updateProgress();
   checkDailyGoalAuto();
 }
 
-
-// ======================================================
+// ===============================
 // PROGRESS RING
-// ======================================================
+// ===============================
 function updateProgress() {
   const ring = document.getElementById("progressRing");
   const ringLabel = document.getElementById("ringLabel");
@@ -54,29 +53,32 @@ function updateProgress() {
   ringLabel.textContent = pct + "%";
 }
 
-
-// ======================================================
+// ===============================
 // NOTIFICATION
-// ======================================================
+// ===============================
 function showNotification() {
   if (!notifyEl) return;
   notifyEl.classList.add("show");
   setTimeout(() => notifyEl.classList.remove("show"), 1600);
 }
 
-
-// ======================================================
+// ===============================
 // ADD TASK
-// ======================================================
+// ===============================
 function addTask() {
+  if (!taskInput) return;
   const text = taskInput.value.trim();
   if (text === "") return;
 
   tasks.push({ text, done: false });
+
+  sPop(); // 🎵 SOUND ADD
+
   saveTasks();
 
   taskInput.value = "";
   showNotification();
+  updateProgress();
 }
 
 addBtn?.addEventListener("click", addTask);
@@ -84,10 +86,9 @@ taskInput?.addEventListener("keypress", e => {
   if (e.key === "Enter") addTask();
 });
 
-
-// ======================================================
-// DAILY GOAL SYSTEM (FULL FIXED VERSION)
-// ======================================================
+// ===============================
+// DAILY GOAL SYSTEM
+// ===============================
 function loadGoal() {
   const saved = localStorage.getItem("daily_goal");
   const done = localStorage.getItem("daily_goal_done") === "true";
@@ -114,13 +115,14 @@ function saveGoal() {
 }
 saveGoalBtn?.addEventListener("click", saveGoal);
 
-
-// selesai manual
 function completeDailyGoal() {
   localStorage.removeItem("daily_goal");
   localStorage.setItem("daily_goal_done", "true");
 
   goalText.textContent = "";
+
+  sDing(); // 🎵 SOUND ACHIEVEMENT
+
   showGoalCongrats();
 
   setTimeout(() => {
@@ -128,7 +130,6 @@ function completeDailyGoal() {
   }, 500);
 }
 
-// event checkbox
 goalCheck?.addEventListener("change", () => {
   if (goalCheck.checked) {
     completeDailyGoal();
@@ -137,27 +138,18 @@ goalCheck?.addEventListener("change", () => {
   }
 });
 
-
-// ======================================================
-// AUTO COMPLETE GOAL (BUG FIXED)
-// ======================================================
 function checkDailyGoalAuto() {
   const total = tasks.length;
   const done = tasks.filter(t => t.done).length;
-  const goalDone = localStorage.getItem("daily_goal_done") === "true";
-
-  // FIX: kalau goal sudah selesai → jangan trigger lagi
-  if (goalDone) return;
 
   if (total > 0 && done === total) {
     completeDailyGoal();
   }
 }
 
-
-// ======================================================
-// CONFETTI
-// ======================================================
+// ===============================
+// CONGRATS + CONFETTI
+// ===============================
 function showGoalCongrats() {
   goalCongrats.style.display = "block";
   startConfetti();
@@ -205,10 +197,9 @@ function startConfetti() {
   animate();
 }
 
-
-// ======================================================
-// GREETING CLOCK
-// ======================================================
+// ===============================
+// SUPER GREETING CLOCK
+// ===============================
 function runSuperGreeting() {
   const greetingEl = document.getElementById("greeting");
   if (!greetingEl) return;
@@ -239,10 +230,9 @@ function runSuperGreeting() {
   `;
 }
 
-
-// ======================================================
-// MOTIVATIONAL QUOTES (every 30 min)
-// ======================================================
+// ===============================
+// MOTIVATIONAL QUOTES SYSTEM (30 mins)
+// ===============================
 const quotes = [
   "Tetap bergerak walau pelan, yang penting tidak berhenti.",
   "Kerja keras tidak akan mengkhianati hasil.",
@@ -260,11 +250,11 @@ function updateQuote() {
   const quoteEl = document.getElementById("quote");
   if (!quoteEl) return;
 
-  const r = Math.floor(Math.random() * quotes.length);
-  const picked = quotes[r];
+  const randomIndex = Math.floor(Math.random() * quotes.length);
+  const selected = quotes[randomIndex];
 
-  quoteEl.textContent = picked;
-  localStorage.setItem("quote_last", picked);
+  quoteEl.textContent = selected;
+  localStorage.setItem("quote_last", selected);
   localStorage.setItem("quote_time", Date.now());
 }
 
@@ -272,23 +262,29 @@ function quoteScheduler() {
   const quoteEl = document.getElementById("quote");
   if (!quoteEl) return;
 
-  const last = localStorage.getItem("quote_last");
-  const time = Number(localStorage.getItem("quote_time"));
+  const lastQuote = localStorage.getItem("quote_last");
+  const lastTime = Number(localStorage.getItem("quote_time"));
 
-  if (!last || !time) return updateQuote();
+  if (!lastQuote || !lastTime) {
+    updateQuote();
+    return;
+  }
 
-  const diff = Date.now() - time;
+  const now = Date.now();
+  const diff = now - lastTime;
 
-  if (diff >= 30 * 60 * 1000) updateQuote();
-  else quoteEl.textContent = last;
+  if (diff >= 30 * 60 * 1000) {
+    updateQuote();
+  } else {
+    quoteEl.textContent = lastQuote;
+  }
 }
 
 setInterval(quoteScheduler, 60000);
 
-
-// ======================================================
+// ===============================
 // MOOD SYSTEM
-// ======================================================
+// ===============================
 const moodButtons = document.querySelectorAll(".mood-btn");
 const moodText = document.getElementById("moodText");
 
@@ -313,8 +309,9 @@ const moodMessages = {
 moodButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     const mood = btn.dataset.mood;
-    const msgList = moodMessages[mood];
-    const message = msgList[Math.floor(Math.random() * msgList.length)];
+
+    const list = moodMessages[mood];
+    const message = list[Math.floor(Math.random() * list.length)];
 
     moodText.textContent = message;
 
@@ -324,18 +321,60 @@ moodButtons.forEach(btn => {
 });
 
 function loadMood() {
+  const savedMood = localStorage.getItem("currentMood");
   const savedMsg = localStorage.getItem("currentMoodMessage");
-  if (savedMsg) moodText.textContent = savedMsg;
+
+  if (savedMood && savedMsg) {
+    moodText.textContent = savedMsg;
+  }
 }
 
+// ===============================
+// SOUND SYSTEM – SIMPLE & SAFE
+// ===============================
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-// ======================================================
+function playTone(freq = 440, duration = 120, volume = 0.25) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.frequency.value = freq;
+  gain.gain.value = volume;
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration / 1000);
+}
+
+function sPop() {
+  playTone(520, 80, 0.25);
+  setTimeout(() => playTone(660, 60, 0.18), 50);
+}
+
+function sClick() {
+  playTone(400, 50, 0.15);
+}
+
+function sWoosh() {
+  playTone(180, 60, 0.12);
+  setTimeout(() => playTone(120, 80, 0.08), 70);
+}
+
+function sDing() {
+  playTone(700, 120, 0.25);
+  setTimeout(() => playTone(900, 160, 0.22), 100);
+  setTimeout(() => playTone(1100, 180, 0.20), 200);
+}
+
+// ===============================
 // STARTUP
-// ======================================================
+// ===============================
 loadGoal();
-loadMood();
 updateProgress();
-quoteScheduler();
 checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
+quoteScheduler();
+loadMood();
