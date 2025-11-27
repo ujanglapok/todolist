@@ -27,6 +27,7 @@ function saveTasks() {
   checkDailyGoalAuto();
 }
 
+
 // ===============================
 // PROGRESS RING
 // ===============================
@@ -51,7 +52,11 @@ function updateProgress() {
   circle.style.strokeDasharray = circumference;
   circle.style.strokeDashoffset = offset;
   ringLabel.textContent = pct + "%";
+  saveDailyProgress(pct);
+loadHistoryProgress();
+
 }
+
 
 // ===============================
 // NOTIFICATION
@@ -62,6 +67,7 @@ function showNotification() {
   setTimeout(() => notifyEl.classList.remove("show"), 1600);
 }
 
+
 // ===============================
 // ADD TASK
 // ===============================
@@ -71,9 +77,6 @@ function addTask() {
   if (text === "") return;
 
   tasks.push({ text, done: false });
-
-  sPop(); // 🎵 SOUND ADD
-
   saveTasks();
 
   taskInput.value = "";
@@ -85,6 +88,7 @@ addBtn?.addEventListener("click", addTask);
 taskInput?.addEventListener("keypress", e => {
   if (e.key === "Enter") addTask();
 });
+
 
 // ===============================
 // DAILY GOAL SYSTEM
@@ -120,9 +124,6 @@ function completeDailyGoal() {
   localStorage.setItem("daily_goal_done", "true");
 
   goalText.textContent = "";
-
-  sDing(); // 🎵 SOUND ACHIEVEMENT
-
   showGoalCongrats();
 
   setTimeout(() => {
@@ -146,6 +147,7 @@ function checkDailyGoalAuto() {
     completeDailyGoal();
   }
 }
+
 
 // ===============================
 // CONGRATS + CONFETTI
@@ -197,6 +199,7 @@ function startConfetti() {
   animate();
 }
 
+
 // ===============================
 // SUPER GREETING CLOCK
 // ===============================
@@ -230,9 +233,11 @@ function runSuperGreeting() {
   `;
 }
 
+
 // ===============================
 // MOTIVATIONAL QUOTES SYSTEM (30 mins)
 // ===============================
+
 const quotes = [
   "Tetap bergerak walau pelan, yang penting tidak berhenti.",
   "Kerja keras tidak akan mengkhianati hasil.",
@@ -274,20 +279,22 @@ function quoteScheduler() {
   const diff = now - lastTime;
 
   if (diff >= 30 * 60 * 1000) {
+    // 30 menit berlalu
     updateQuote();
   } else {
+    // tetap pakai quote sebelumnya
     quoteEl.textContent = lastQuote;
   }
 }
 
-setInterval(quoteScheduler, 60000);
+setInterval(quoteScheduler, 60000); // cek tiap 1 menit
 
-// ===============================
+
 // MOOD SYSTEM
-// ===============================
 const moodButtons = document.querySelectorAll(".mood-btn");
 const moodText = document.getElementById("moodText");
 
+// Kata-kata sesuai mood
 const moodMessages = {
   happy: [
     "Senangnya kamu hari ini! Pertahankan energi positifmu! ✨",
@@ -306,20 +313,24 @@ const moodMessages = {
   ]
 };
 
+// Klik mood
 moodButtons.forEach(btn => {
   btn.addEventListener("click", () => {
     const mood = btn.dataset.mood;
 
+    // Random salah satu pesan
     const list = moodMessages[mood];
     const message = list[Math.floor(Math.random() * list.length)];
 
     moodText.textContent = message;
 
+    // Simpan mood ke localStorage
     localStorage.setItem("currentMood", mood);
     localStorage.setItem("currentMoodMessage", message);
   });
 });
 
+// Load mood sebelumnya saat open halaman
 function loadMood() {
   const savedMood = localStorage.getItem("currentMood");
   const savedMsg = localStorage.getItem("currentMoodMessage");
@@ -328,47 +339,40 @@ function loadMood() {
     moodText.textContent = savedMsg;
   }
 }
+function saveDailyProgress(pct) {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  let history = JSON.parse(localStorage.getItem("progress_history") || "{}");
 
-// ===============================
-// SOUND SYSTEM – SIMPLE & SAFE
-// ===============================
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  history[today] = pct;
+  localStorage.setItem("progress_history", JSON.stringify(history));
+}
+function loadHistoryProgress() {
+  const today = new Date();
+  const format = d => d.toISOString().slice(0, 10);
 
-function playTone(freq = 440, duration = 120, volume = 0.25) {
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  const todayStr = format(today);
 
-  osc.frequency.value = freq;
-  gain.gain.value = volume;
+  const yesterday = new Date(today); 
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = format(yesterday);
 
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  const tomorrowStr = format(tomorrow);
 
-  osc.start();
-  osc.stop(audioCtx.currentTime + duration / 1000);
+  let history = JSON.parse(localStorage.getItem("progress_history") || "{}");
+
+  document.getElementById("progYesterday").textContent =
+    history[yesterdayStr] !== undefined ? history[yesterdayStr] + "%" : "-";
+
+  document.getElementById("progToday").textContent =
+    history[todayStr] !== undefined ? history[todayStr] + "%" : "-";
+
+  document.getElementById("progTomorrow").textContent =
+    history[tomorrowStr] !== undefined ? history[tomorrowStr] + "%" : "-";
 }
 
-function sPop() {
-  playTone(520, 80, 0.25);
-  setTimeout(() => playTone(660, 60, 0.18), 50);
-}
 
-function sClick() {
-  playTone(400, 50, 0.15);
-}
-
-function sWoosh() {
-  playTone(180, 60, 0.12);
-  setTimeout(() => playTone(120, 80, 0.08), 70);
-}
-
-function sDing() {
-  playTone(700, 120, 0.25);
-  setTimeout(() => playTone(900, 160, 0.22), 100);
-  setTimeout(() => playTone(1100, 180, 0.20), 200);
-}
-
-// ===============================
 // STARTUP
 // ===============================
 loadGoal();
@@ -377,4 +381,5 @@ checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
-loadMood();
+loadHistoryProgress();
+
