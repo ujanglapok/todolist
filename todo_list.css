@@ -311,12 +311,101 @@ button:active, .btn:active { transform: translateY(0); }
   .quote{ font-size:13px; min-height:48px }
   .nav-links{ display:none } /* keep navbar simple on tiny screens */
 }
-.new-task-anim {
-  animation: newTask .35s ease;
+.history-progress {
+  display: flex;
+  gap: 16px;
+  margin-top: 18px;
 }
 
-@keyframes newTask {
-  0% { transform: scale(.94); opacity: .5; }
-  100% { transform: scale(1); opacity: 1; }
+.hp-card {
+  flex: 1;
+  background: rgba(255,255,255,0.65);
+  padding: 16px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(2,6,23,0.06);
 }
+
+.hp-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f1724;
+}
+
+.hp-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent-dark);
+}
+
+@media (max-width: 700px) {
+  .history-progress {
+    flex-direction: column;
+  }
+}
+
+/* BAR */
+.progress-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* center horizontal */
+  justify-content: middle; /* center vertical */
+  text-align: center;
+}
+
+.ring-wrap {
+  margin-top: 10px;   /* kasih jarak sedikit biar rapi */
+}
+
+.progress-center {
+  width: 100%;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+.progress-ring-center {
+  width: 100%;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+/* Fix center progress ring on mobile */
+@media (max-width: 480px) {
+
+  /* sidepanel jadi full width */
+  .sidepanel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* <-- penting */
+  }
+
+  /* progress block juga ikut center */
+  .progress-block {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  /* center ring */
+  .progress-ring-center,
+  .ring-wrap {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+  }
+}
+/* Perbaiki posisi teks 0% di tengah ring (khusus mobile) */
+@media (max-width: 480px) {
+  .ring-label {
+    transform: translateY(9px) !important;
+  }
+}
+
 
