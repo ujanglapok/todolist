@@ -6,16 +6,13 @@
 <title>Todo List Job</title>
 
 <!-- CSS -->
-<link rel="stylesheet" href="todo_list.css" />
+<link rel="stylesheet" href="todo_list.css?v=9999">
 </head>
 <body>
 
 <!-- Background animasi -->
 <div class="bg-anim" aria-hidden="true"></div>
-  
-<!-- CONFETTI CANVAS -->
-    <canvas id="confettiCanvas" class="confetti"></canvas>
-  
+
 <!-- NAVBAR -->
 <nav class="navbar">
   <div class="nav-brand">Todo List Job</div>
@@ -59,16 +56,37 @@
 
     <!-- PROGRESS RING -->
     <div class="progress-block">
-      <div class="progress-title">Progress Hari Ini</div>
+  <div class="progress-title">Progress Hari Ini</div>
 
-      <div class="ring-wrap">
-        <svg id="progressRing" width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
-          <circle cx="60" cy="60" r="48" class="ring-fill"></circle>
-        </svg>
-        <div class="ring-label" id="ringLabel">0%</div>
-      </div>
+  <div class="progress-ring-center">
+    <div class="ring-wrap">
+      <svg id="progressRing" width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="48" class="ring-bg"></circle>
+        <circle cx="60" cy="60" r="48" class="ring-fill"></circle>
+      </svg>
+      <div class="ring-label" id="ringLabel">0%</div>
     </div>
+  </div>
+</div>
+
+    <!-- DAILY HISTORY PROGRESS -->
+<div class="history-progress">
+  <div class="hp-card">
+    <h4>Kemarin</h4>
+    <div id="progYesterday" class="hp-value">-</div>
+  </div>
+
+  <div class="hp-card">
+    <h4>Hari Ini</h4>
+    <div id="progToday" class="hp-value">-</div>
+  </div>
+
+  <div class="hp-card">
+    <h4>Besok</h4>
+    <div id="progTomorrow" class="hp-value">-</div>
+  </div>
+</div>
+
 
     <!-- MOOD PICKER -->
     <div class="mood">
@@ -102,7 +120,8 @@
       <a href="cek_todo.html">Cek Todo</a> untuk daftar lengkap.
     </div>
 
-    
+    <!-- CONFETTI CANVAS -->
+    <canvas id="confettiCanvas" class="confetti"></canvas>
   </section>
 
 </main>
@@ -116,15 +135,7 @@
 <footer class="footer">© 2025 Todo List</footer>
 
 <!-- JS -->
-<script>
-  const s = document.createElement("script");
-  s.src = "todo_list.js?v=" + Date.now();
-  document.body.appendChild(s);
-</script>
-
+<script src="todo_list.js"></script>
 
 </body>
 </html>
-
-
-
