@@ -424,14 +424,14 @@ button:active, .btn:active { transform: translateY(0); }
     justify-content: center;
   }
 }
-/* FIX POSISI TEKS DALAM RING (MOBILE) */
+/* Fix center progress ring on mobile */
 @media (max-width: 480px) {
   .ring-label {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) !important;
+    transform: translateY(9px) !important;
   }
 }
+
+
 
 
 
