@@ -311,39 +311,62 @@ button:active, .btn:active { transform: translateY(0); }
   .quote{ font-size:13px; min-height:48px }
   .nav-links{ display:none } /* keep navbar simple on tiny screens */
 }
+/* ======================= HISTORY PROGRESS (RAPI & KECIL) ======================= */
 .history-progress {
   display: flex;
-  gap: 16px;
-  margin-top: 18px;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .hp-card {
   flex: 1;
-  background: rgba(255,255,255,0.65);
-  padding: 16px;
-  border-radius: 16px;
+  background: rgba(255,255,255,0.8);
+  padding: 14px;
+  border-radius: 14px;
   text-align: center;
-  box-shadow: 0 6px 20px rgba(2,6,23,0.06);
+  box-shadow: 0 4px 14px rgba(2,6,23,0.05);
+  min-width: 0;           /* BIAR NGGAK MELEBAR */
 }
 
 .hp-card h4 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
+  margin: 0 0 6px 0;
+  font-size: 13px;
   font-weight: 700;
   color: #0f1724;
 }
 
 .hp-value {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 800;
   color: var(--accent-dark);
 }
 
+/* HP — tampilan kolom supaya tidak panjang */
 @media (max-width: 700px) {
   .history-progress {
-    flex-direction: column;
+    flex-direction: row;          /* masih sebaris */
+    gap: 8px;
+  }
+  .hp-card {
+    padding: 12px;
+  }
+  .hp-value {
+    font-size: 16px;
   }
 }
+
+/* SMALL MOBILE (rapi vertikal) */
+@media (max-width: 450px) {
+  .history-progress {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .hp-card {
+    width: 100%;
+  }
+}
+
 
 /* BAR */
 .progress-block {
@@ -401,11 +424,14 @@ button:active, .btn:active { transform: translateY(0); }
     justify-content: center;
   }
 }
-/* Perbaiki posisi teks 0% di tengah ring (khusus mobile) */
+/* FIX POSISI TEKS DALAM RING (MOBILE) */
 @media (max-width: 480px) {
   .ring-label {
-    transform: translateY(9px) !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
   }
 }
+
 
 
