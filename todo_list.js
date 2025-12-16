@@ -318,19 +318,28 @@ const moodText = document.getElementById("moodText");
 // Kata-kata sesuai mood
 const moodMessages = {
   happy: [
-    "Senangnya kamu hari ini! Pertahankan energi positifmu! ✨",
-    "Kamu terlihat bersemangat! Hari ini pasti jadi hari yang hebat! 😄",
-    "Mood bagus! Gunakan untuk menyelesaikan banyak hal! 🚀"
+    "Energi kamu lagi bagus hari ini ✨",
+    "Hari ini rasanya lebih ringan 😄",
+    "Mood oke, lanjut gas 🚀",
+    "Hari ini terasa berpihak ✨",
+    "Langkahmu ringan, senyummu ikut 😄",
+    "Energi baik sedang singgah 🚀",
   ],
   okay: [
-    "Sedang biasa saja ya? Tidak apa-apa, pelan tapi pasti. 🌿",
-    "Tidak buruk, tidak juga hebat. Tapi kamu tetap maju! 💪",
-    "Hari biasa itu normal. Kamu tetap hebat kok. 🙂"
+    "Hari biasa juga tetap berarti 🌿",
+    "Pelan tapi tetap jalan 💪",
+    "Nggak apa-apa, kamu masih on track 🙂",
+    "Pelan, tapi tidak berhenti 🌿",
+    "Hari biasa pun tetap berarti 💪",
+    "Kamu masih berdiri, itu cukup 🙂",
   ],
   sad: [
-    "Lagi sedih? Nggak apa-apa. Kamu kuat, kamu bisa melewati ini. 🤍",
-    "Terasa berat ya? Ingat, semua bakal membaik. Kamu nggak sendiri. 🌧️➡️🌤️",
-    "Pelan-pelan ya… Kamu sudah melakukan yang terbaik. Aku bangga sama kamu. 💛"
+    "Capek itu wajar 🤍",
+    "Pelan-pelan, kamu nggak sendiri 🌧️",
+    "Hari ini berat, tapi kamu kuat 💛",
+    "Lelah bukan tanda kalah 🤍",
+    "Tenang, badai pasti reda 🌧️",
+    "Kamu bertahan, itu sudah hebat 💛",
   ]
 };
 
@@ -403,6 +412,7 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
 
 
