@@ -164,40 +164,58 @@ function showGoalCongrats() {
 function startConfetti() {
   const canvas = confettiCanvas;
   const ctx = canvas.getContext("2d");
+
   canvas.style.display = "block";
+  canvas.style.position = "fixed";
+  canvas.style.top = 0;
+  canvas.style.left = 0;
+  canvas.style.width = "100vw";
+  canvas.style.height = "100vh";
+  canvas.style.zIndex = 999;
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
   const pieces = [];
-  for (let i = 0; i < 36; i++) {
+  const totalPieces = window.innerWidth < 600 ? 50 : 80; // mobile vs desktop
+
+  for (let i = 0; i < totalPieces; i++) {
     pieces.push({
       x: Math.random() * canvas.width,
-      y: -20,
-      size: 6 + Math.random() * 8,
-      speed: 2 + Math.random() * 3,
+      y: Math.random() * -canvas.height, // ⬅️ start dari ATAS
+      size: 6 + Math.random() * 6,
+      speed: 2 + Math.random() * 4,
+      drift: (Math.random() - 0.5) * 1.5,
       color: `hsl(${Math.random() * 360},80%,60%)`
     });
   }
 
   let frame = 0;
+  const maxFrame = 120; // ⬅️ lebih lama, kelihatan di HP
+
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     pieces.forEach(p => {
       p.y += p.speed;
+      p.x += p.drift;
+
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x, p.y, p.size, p.size);
     });
 
     frame++;
-    if (frame < 40) requestAnimationFrame(animate);
-    else {
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+    if (frame < maxFrame) {
+      requestAnimationFrame(animate);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       canvas.style.display = "none";
     }
   }
+
   animate();
 }
+
 
 
 // ===============================
@@ -382,4 +400,5 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
