@@ -171,41 +171,43 @@ function startConfetti() {
   canvas.style.left = 0;
   canvas.style.width = "100vw";
   canvas.style.height = "100vh";
-  canvas.style.zIndex = 999;
+  canvas.style.zIndex = 9999;
 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
   const pieces = [];
-  const totalPieces = window.innerWidth < 600 ? 50 : 80; // mobile vs desktop
+  const total = window.innerWidth < 600 ? 60 : 100;
 
-  for (let i = 0; i < totalPieces; i++) {
+  for (let i = 0; i < total; i++) {
     pieces.push({
       x: Math.random() * canvas.width,
-      y: Math.random() * -canvas.height, // ⬅️ start dari ATAS
+      y: Math.random() * -canvas.height,
       size: 6 + Math.random() * 6,
-      speed: 2 + Math.random() * 4,
-      drift: (Math.random() - 0.5) * 1.5,
+      speedY: 2 + Math.random() * 4,
+      speedX: (Math.random() - 0.5) * 1.5,
       color: `hsl(${Math.random() * 360},80%,60%)`
     });
   }
 
   let frame = 0;
-  const maxFrame = 120; // ⬅️ lebih lama, kelihatan di HP
+  const maxFrame = 120;
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    pieces.push({
-  x: Math.random() * canvas.width,
-  y: Math.random() * -canvas.height, // ⬅️ PENTING
-  size: 6 + Math.random() * 8,
-  speed: 2 + Math.random() * 4,
-  color: `hsl(${Math.random() * 360},80%,60%)`
-});
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+    pieces.forEach(p => {
+      p.y += p.speedY;
+      p.x += p.speedX;
 
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+    });
 
     frame++;
     if (frame < maxFrame) {
@@ -218,6 +220,7 @@ canvas.height = window.innerHeight;
 
   animate();
 }
+
 
 
 
@@ -412,6 +415,7 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
 
 
