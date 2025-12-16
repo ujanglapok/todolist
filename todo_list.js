@@ -184,7 +184,7 @@ function startConfetti() {
       x: Math.random() * canvas.width,
       y: Math.random() * -canvas.height,
       size: 6 + Math.random() * 6,
-      speedY: 2 + Math.random() * 2.5,
+      speedY: 2 + Math.random() * 4,
       speedX: (Math.random() - 0.5) * 1.5,
       color: `hsl(${Math.random() * 360},80%,60%)`
     });
@@ -415,6 +415,7 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
 
 
