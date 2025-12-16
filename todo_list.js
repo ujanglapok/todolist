@@ -184,14 +184,14 @@ function startConfetti() {
       x: Math.random() * canvas.width,
       y: Math.random() * -canvas.height,
       size: 6 + Math.random() * 6,
-      speedY: 2 + Math.random() * 4,
+      speedY: 2 + Math.random() * 2.5,
       speedX: (Math.random() - 0.5) * 1.5,
       color: `hsl(${Math.random() * 360},80%,60%)`
     });
   }
 
   let frame = 0;
-  const maxFrame = 120;
+  const maxFrame = 250;
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -415,6 +415,7 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
 
 
