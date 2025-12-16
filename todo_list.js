@@ -191,7 +191,7 @@ function startConfetti() {
   }
 
   let frame = 0;
-  const maxFrame = 250;
+  const maxFrame = 350;
 
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -415,6 +415,7 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
 
 
