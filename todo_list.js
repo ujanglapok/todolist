@@ -196,13 +196,16 @@ function startConfetti() {
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    pieces.forEach(p => {
-      p.y += p.speed;
-      p.x += p.drift;
+    pieces.push({
+  x: Math.random() * canvas.width,
+  y: Math.random() * -canvas.height, // ⬅️ PENTING
+  size: 6 + Math.random() * 8,
+  speed: 2 + Math.random() * 4,
+  color: `hsl(${Math.random() * 360},80%,60%)`
+});
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-      ctx.fillStyle = p.color;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
-    });
 
     frame++;
     if (frame < maxFrame) {
@@ -400,5 +403,6 @@ runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
 loadHistoryProgress();
+
 
 
