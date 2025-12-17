@@ -153,73 +153,106 @@ function checkDailyGoalAuto() {
 // CONGRATS + CONFETTI
 // ===============================
 function showGoalCongrats() {
-  goalCongrats.style.display = "block";
+  if (goalCongrats) {
+    goalCongrats.style.display = "block";
+  }
+
   startConfetti();
 
   setTimeout(() => {
-    goalCongrats.style.display = "none";
-  }, 2000);
+    if (goalCongrats) {
+      goalCongrats.style.display = "none";
+    }
+  }, 2200);
 }
+
 
 function startConfetti() {
   const canvas = confettiCanvas;
   const ctx = canvas.getContext("2d");
 
-  canvas.style.display = "block";
-  canvas.style.position = "fixed";
-  canvas.style.top = 0;
-  canvas.style.left = 0;
-  canvas.style.width = "100vw";
-  canvas.style.height = "100vh";
-  canvas.style.zIndex = 9999;
+  canvas.style.cssText = `
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    display: block;
+  `;
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const DPR = window.devicePixelRatio || 1;
 
-  const pieces = [];
-  const total = window.innerWidth < 600 ? 60 : 100;
+  function resize() {
+    canvas.width = window.innerWidth * DPR;
+    canvas.height = window.innerHeight * DPR;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  }
+  resize();
+  window.addEventListener("resize", resize);
 
-  for (let i = 0; i < total; i++) {
-    pieces.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * -canvas.height,
-      size: 6 + Math.random() * 6,
-      speedY: 2 + Math.random() * 4,
-      speedX: (Math.random() - 0.5) * 1.5,
-      color: `hsl(${Math.random() * 360},80%,60%)`
+  // 🎨 WARNA ELEGAN
+  const colors = ["#0d9488", "#14b8a6", "#2dd4bf", "#5eead4"];
+
+  const particles = [];
+  const COUNT = window.innerWidth < 600 ? 35 : 55;
+
+  for (let i = 0; i < COUNT; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: -Math.random() * window.innerHeight, // start dari ATAS
+      w: 6 + Math.random() * 6,
+      h: 14 + Math.random() * 16,
+      speed: 2.5 + Math.random() * 2.5, // ⬅️ JATUH NYATA
+      drift: (Math.random() - 0.5) * 1.2,
+      rotate: Math.random() * 360,
+      rotateSpeed: (Math.random() - 0.5) * 4,
+      color: colors[Math.floor(Math.random() * colors.length)]
     });
   }
 
   let frame = 0;
-  const maxFrame = 350;
+  const MAX = 180; // durasi pas
 
   function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    pieces.forEach(p => {
-      p.y += p.speedY;
-      p.x += p.speedX;
+  let stillFalling = false;
 
-      ctx.fillStyle = p.color;
-      ctx.fillRect(p.x, p.y, p.size, p.size);
+  particles.forEach(p => {
+    p.y += p.speed;
+    p.x += p.drift;
+    p.rotate += p.rotateSpeed;
 
-      if (p.y > canvas.height) {
-        p.y = -10;
-        p.x = Math.random() * canvas.width;
-      }
-    });
-
-    frame++;
-    if (frame < maxFrame) {
-      requestAnimationFrame(animate);
-    } else {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      canvas.style.display = "none";
+    // cek apakah masih ada yg di layar / belum lewat bawah
+    if (p.y < window.innerHeight + p.h * 2) {
+      stillFalling = true;
     }
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotate * Math.PI) / 180);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = 0.9;
+    ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    ctx.restore();
+  });
+
+  // ⬇️ LANJUT SAMPAI SEMUA PARTIKEL LEWAT BAWAH
+  if (stillFalling) {
+    requestAnimationFrame(animate);
+  } else {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.style.display = "none";
+    window.removeEventListener("resize", resize);
   }
+}
+
 
   animate();
 }
+
+
 
 
 
@@ -318,7 +351,6 @@ setInterval(quoteScheduler, 60000); // cek tiap 1 menit
 const moodButtons = document.querySelectorAll(".mood-btn");
 const moodText = document.getElementById("moodText");
 
-// Kata-kata sesuai mood
 const moodMessages = {
   happy: [
     "Energi kamu lagi bagus hari ini ✨",
@@ -345,6 +377,7 @@ const moodMessages = {
     "Kamu bertahan, itu sudah hebat 💛",
   ]
 };
+
 
 // Klik mood
 moodButtons.forEach(btn => {
@@ -414,12 +447,6 @@ checkDailyGoalAuto();
 runSuperGreeting();
 setInterval(runSuperGreeting, 1000);
 quoteScheduler();
+updateProgress();
 loadHistoryProgress();
-
-
-
-
-
-
-
 
